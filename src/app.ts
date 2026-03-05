@@ -1,57 +1,51 @@
-
 import "dotenv/config";
 import express from "express";
 import cookieParser from "cookie-parser";
-import path from "path";
-
 import { connectDB } from "./db";
 import authRoutes from "./routes/authRoutes";
 import pageRoutes from "./routes/pageRoutes";
+import jwt from "jsonwebtoken";
 
 const app = express();
-
-// Important for Render proxy
+// important behind Render proxy
 app.set("trust proxy", 1);
-
-// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-
-// View engine
 app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+app.set("views", "./src/views");
 
-// Routes
+app.use((req, res, next) => {
+  const token = req.cookies?.token;
+  res.locals.user = null;
+  res.locals.path = req.path; // for active nav links
+  if (token) {
+    try {
+      const payload = jwt.verify(token, process.env.JWT_SECRET!) as { email: string, userId: string };
+      res.locals.user = payload;
+    } catch {}
+  }
+  next();
+});
+
 app.use(authRoutes);
 app.use(pageRoutes);
 
-// Port
-const PORT = Number(process.env.PORT) || 3000;
-
+const PORT = Number(process.env.PORT || 3000);
 async function main() {
-  try {
-    console.log("🚀 Starting server...");
-
-    const uri = process.env.MONGODB_URI;
-
-    if (!uri) {
-      throw new Error("❌ MONGODB_URI is missing from environment variables");
-    }
-
-    // Connect to MongoDB
-    await connectDB(uri);
-    console.log("✅ MongoDB connected");
-
-    // Start server
-    app.listen(PORT, () => {
-      console.log(`✅ Server is running on port ${PORT}`);
-    });
-
-  } catch (err) {
-    console.error("❌ Startup error:", err);
-    process.exit(1);
+  console.log("🚀 Starting server...");
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error("❌ MONGODB_URI is missing from .env");
   }
+
+  await connectDB(uri);
+  
+  app.listen(PORT, () => {
+    console.log(`✅ Server is running: http://localhost:${PORT}`);
+  });
 }
 
-main();
-
+main().catch((err) => {
+  console.error("❌ Startup error:", err);
+  process.exit(1);
+});

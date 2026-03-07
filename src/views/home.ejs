@@ -1,8 +1,53 @@
 <!DOCTYPE html>
-<html>
-  <body>
-    <h1>Home</h1>
-    <p><a href="/login">Login</a></p>
-    <p><a href="/profile">Profile (protected)</a></p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #ffe0f0 0%, #ffc2e0 50%, #ffaed6 100%);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 48px 56px;
+      box-shadow: 0 8px 40px rgba(255, 100, 160, 0.18);
+      text-align: center;
+      max-width: 420px; width: 100%;
+    }
+    .emoji { font-size: 48px; margin-bottom: 12px; }
+    h1 { font-size: 32px; font-weight: 700; color: #e91e8c; margin-bottom: 8px; }
+    p.sub { font-size: 14px; color: #aaa; margin-bottom: 32px; }
+    .btn {
+      display: block; width: 100%;
+      padding: 14px; border-radius: 12px;
+      font-size: 15px; font-weight: 600;
+      text-decoration: none; margin-bottom: 12px;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(233,30,140,0.2); }
+    .btn-primary {
+      background: linear-gradient(135deg, #ff6eb4, #e91e8c);
+      color: #fff;
+    }
+    .btn-outline {
+      background: #fff; color: #e91e8c;
+      border: 2px solid #e91e8c;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="emoji">🌸</div>
+    <h1>Welcome!</h1>
+    <p class="sub">Your cozy little corner of the internet.</p>
+    <a href="/login" class="btn btn-primary">Login</a>
+    <a href="/profile" class="btn btn-outline">Profile (protected)</a>
+  </div>
+</body>
 </html>
